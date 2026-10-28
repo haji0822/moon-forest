@@ -50,8 +50,8 @@
       <label class="field" id="code-field" hidden><span>초대 코드</span>
         <input id="login-code" type="password" autocomplete="off"></label>
       <p id="login-error" class="form-error" role="alert" hidden></p>
-      <button id="login-submit" class="btn btn-primary" type="submit">숲으로 들어간다</button>
-      <button id="mode-toggle" class="btn" type="button">처음이라면 집에 참여하기</button>
+      <button id="login-submit" class="btn btn-primary" type="submit">로그인</button>
+      <button id="mode-toggle" class="btn" type="button">가입하기</button>
       <p class="muted small">초대 코드를 아는 두 사람만 참여할 수 있습니다.</p>
     </form>
   </section>
@@ -60,7 +60,7 @@
   <section id="view-denied" class="view center-view" hidden>
     <div class="page-panel narrow">
       <h1 class="title-md">이 계정은 아직 집에 참여하지 않았습니다</h1>
-      <p>로그아웃한 뒤 "처음이라면 집에 참여하기"로 초대 코드를 입력해 참여하세요. 이미 정원(2명)이 찼다면 이 계정은 사용할 수 없습니다.</p>
+      <p>로그아웃한 뒤 "가입하기"에서 초대 코드를 입력해 가입하세요. 이미 정원(2명)이 찼다면 이 계정은 사용할 수 없습니다.</p>
       <p><code id="denied-uid" class="uid-box"></code></p>
       <button id="denied-logout" class="btn" type="button">로그아웃</button>
     </div>
@@ -75,7 +75,7 @@
       </div>
       <nav id="nav" class="nav" aria-label="주 메뉴">
         <a class="nav-item" href="#/home" data-route="home"><span>집</span></a>
-        <button class="nav-item" type="button" disabled title="2단계에서 구현 예정"><span>캐릭터</span><small>개발 예정</small></button>
+        <a class="nav-item" href="#/characters" data-route="characters"><span>캐릭터</span></a>
         <button class="nav-item" type="button" disabled title="3단계에서 구현 예정"><span>탐색</span><small>개발 예정</small></button>
         <button class="nav-item" type="button" disabled title="4단계에서 구현 예정"><span>소지품</span><small>개발 예정</small></button>
         <button class="nav-item" type="button" disabled title="5단계에서 구현 예정"><span>쪽지함</span><small>개발 예정</small></button>
@@ -87,6 +87,7 @@
         <span class="topbar-title" id="topbar-title">집</span>
         <span class="topbar-user" id="topbar-user"></span>
       </header>
+      <div id="world-bar" class="world-bar" aria-label="게임 날짜와 날씨"></div>
       <main id="main" class="content" tabindex="-1"></main>
     </div>
   </div>
