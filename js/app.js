@@ -3,9 +3,13 @@ import { watchAuth, login, signUp, logout, errorMessage } from "./auth.js";
 import { ensurePlayer, claimSeat } from "./database.js";
 import { register, startRouter } from "./router.js";
 import { renderHome, renderSettings } from "./pages.js";
+import { renderCodex, renderCharacterEdit } from "./character.js";
+import { initWorld } from "./gameState.js";
 import { showView, $, toast } from "./ui.js";
 
 register("home", "집", renderHome);
+register("characters", "캐릭터 도감", renderCodex);
+register("character-edit", "캐릭터 등록·수정", renderCharacterEdit);
 register("settings", "설정", renderSettings);
 
 let routerStarted = false;
@@ -18,6 +22,11 @@ async function onAuth(user, preferredName) {
   try {
     const player = await ensurePlayer(user, preferredName);
     window.__ctx = { user, player };
+    // 서버가 기록한 접속 시각으로 내 기기 시계와 서버 시계의 차이를 보정합니다.
+    const serverMs = player.lastLoginAt?.toMillis?.();
+    const offset = serverMs ? serverMs - Date.now() : 0;
+    try { await initWorld(offset); }
+    catch (we) { console.error("세계 상태 로딩 실패:", we.code || we.message); toast("세계 상태를 불러오지 못했습니다. 보안 규칙을 확인해 주세요.", "error"); }
     $("#topbar-user").textContent = player.displayName;
     showView("app");
     if (!routerStarted) { routerStarted = true; await startRouter(); }
@@ -38,8 +47,8 @@ function setMode(on) {
   signupMode = on;
   $("#name-field").hidden = !on;
   $("#code-field").hidden = !on;
-  $("#login-submit").textContent = on ? "집에 참여하기" : "숲으로 들어간다";
-  $("#mode-toggle").textContent = on ? "이미 참여했다면 로그인" : "처음이라면 집에 참여하기";
+  $("#login-submit").textContent = on ? "가입하기" : "로그인";
+  $("#mode-toggle").textContent = on ? "로그인하기" : "가입하기";
   $("#login-password").autocomplete = on ? "new-password" : "current-password";
   $("#login-error").hidden = true;
 }
