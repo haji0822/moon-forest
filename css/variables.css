@@ -1,0 +1,17 @@
+:root{
+  --bg:#17151B;
+  --bg-sub:#24212A;
+  --card:#302A34;
+  --parchment:#D8C7A5;
+  --text:#E8E0D4;
+  --text-sub:#A69AA5;
+  --moon:#B8C7D9;
+  --blood:#8C454B;
+  --moss:#66745C;
+  --border:#514653;
+
+  --font-body:"Noto Serif KR","Nanum Myeongjo","Batang","AppleMyungjo",Georgia,serif;
+  --radius:6px;
+  --sidebar-w:220px;
+  --tap:44px;
+}

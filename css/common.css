@@ -1,0 +1,20 @@
+body{
+  background:var(--bg);
+  background-image:radial-gradient(ellipse at 50% -10%,#2a2635 0%,transparent 60%);
+  color:var(--text);
+  font-family:var(--font-body);
+  line-height:1.8;
+  min-height:100vh;
+}
+h1,h2,h3{font-weight:700;line-height:1.35;color:var(--parchment)}
+.title-lg{font-size:1.9rem;letter-spacing:.08em;text-align:center}
+.title-md{font-size:1.3rem}
+.subtitle{text-align:center;color:var(--text-sub);font-size:.72rem;letter-spacing:.18em}
+.muted{color:var(--text-sub)}
+.small{font-size:.85rem}
+code{background:var(--bg);border:1px solid var(--border);border-radius:4px;padding:0 .35em;font-size:.88em;color:var(--moon);word-break:break-all}
+:focus-visible{outline:2px solid var(--moon);outline-offset:2px}
+.moon-mark{width:56px;height:56px;color:var(--moon);margin:0 auto}
+.moon-mark.small{width:26px;height:26px;margin:0}
+.divider{height:1px;margin:.4rem 0;background:linear-gradient(90deg,transparent,var(--border),var(--moon),var(--border),transparent)}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>달이 잠든 숲</title>
+  <meta name="theme-color" content="#17151B">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- Noto Serif KR (SIL OFL 라이선스). 로딩에 실패해도 기본 명조체로 표시됩니다. -->
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/common.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/pages.css">
+</head>
+<body>
+  <noscript>이 게임은 JavaScript가 필요합니다.</noscript>
+
+  <!-- 불러오는 중 -->
+  <section id="view-loading" class="view center-view">
+    <svg class="moon-mark" viewBox="0 0 48 48" aria-hidden="true"><path d="M30 6a18 18 0 1 0 12 30A15 15 0 0 1 30 6z" fill="currentColor"/></svg>
+    <p class="muted">숲의 문을 여는 중…</p>
+  </section>
+
+  <!-- Firebase 설정 안내 -->
+  <section id="view-setup" class="view center-view" hidden>
+    <div class="page-panel narrow">
+      <h1 class="title-md">Firebase 설정이 필요합니다</h1>
+      <p><code>js/firebase-config.js</code> 파일의 <code>YOUR_...</code> 부분을 본인의 Firebase 웹 앱 설정값으로 바꿔 주세요.</p>
+      <p class="muted">자세한 순서는 <code>FIREBASE_SETUP.md</code>를 보세요.</p>
+    </div>
+  </section>
+
+  <!-- 로그인 / 가입 -->
+  <section id="view-login" class="view center-view" hidden>
+    <form id="login-form" class="page-panel narrow" novalidate>
+      <svg class="moon-mark" viewBox="0 0 48 48" aria-hidden="true"><path d="M30 6a18 18 0 1 0 12 30A15 15 0 0 1 30 6z" fill="currentColor"/></svg>
+      <h1 class="title-lg">달이 잠든 숲</h1>
+      <p class="subtitle">THE FOREST WHERE THE MOON SLEEPS</p>
+      <div class="divider" aria-hidden="true"></div>
+      <label class="field" id="name-field" hidden><span>표시 이름 (20자까지)</span>
+        <input id="login-name" type="text" maxlength="20" autocomplete="nickname"></label>
+      <label class="field"><span>이메일</span>
+        <input id="login-email" type="email" autocomplete="username" required></label>
+      <label class="field"><span>비밀번호 (6자 이상)</span>
+        <input id="login-password" type="password" autocomplete="current-password" required></label>
+      <label class="field" id="code-field" hidden><span>초대 코드</span>
+        <input id="login-code" type="password" autocomplete="off"></label>
+      <p id="login-error" class="form-error" role="alert" hidden></p>
+      <button id="login-submit" class="btn btn-primary" type="submit">숲으로 들어간다</button>
+      <button id="mode-toggle" class="btn" type="button">처음이라면 집에 참여하기</button>
+      <p class="muted small">초대 코드를 아는 두 사람만 참여할 수 있습니다.</p>
+    </form>
+  </section>
+
+  <!-- 접근 거부 -->
+  <section id="view-denied" class="view center-view" hidden>
+    <div class="page-panel narrow">
+      <h1 class="title-md">이 계정은 아직 집에 참여하지 않았습니다</h1>
+      <p>로그아웃한 뒤 "처음이라면 집에 참여하기"로 초대 코드를 입력해 참여하세요. 이미 정원(2명)이 찼다면 이 계정은 사용할 수 없습니다.</p>
+      <p><code id="denied-uid" class="uid-box"></code></p>
+      <button id="denied-logout" class="btn" type="button">로그아웃</button>
+    </div>
+  </section>
+
+  <!-- 게임 화면 -->
+  <div id="view-app" class="app-shell" hidden>
+    <aside class="sidebar">
+      <div class="brand">
+        <svg class="moon-mark small" viewBox="0 0 48 48" aria-hidden="true"><path d="M30 6a18 18 0 1 0 12 30A15 15 0 0 1 30 6z" fill="currentColor"/></svg>
+        <span>달이 잠든 숲</span>
+      </div>
+      <nav id="nav" class="nav" aria-label="주 메뉴">
+        <a class="nav-item" href="#/home" data-route="home"><span>집</span></a>
+        <button class="nav-item" type="button" disabled title="2단계에서 구현 예정"><span>캐릭터</span><small>개발 예정</small></button>
+        <button class="nav-item" type="button" disabled title="3단계에서 구현 예정"><span>탐색</span><small>개발 예정</small></button>
+        <button class="nav-item" type="button" disabled title="4단계에서 구현 예정"><span>소지품</span><small>개발 예정</small></button>
+        <button class="nav-item" type="button" disabled title="5단계에서 구현 예정"><span>쪽지함</span><small>개발 예정</small></button>
+        <a class="nav-item" href="#/settings" data-route="settings"><span>설정</span></a>
+      </nav>
+    </aside>
+    <div class="main-col">
+      <header class="topbar">
+        <span class="topbar-title" id="topbar-title">집</span>
+        <span class="topbar-user" id="topbar-user"></span>
+      </header>
+      <main id="main" class="content" tabindex="-1"></main>
+    </div>
+  </div>
+
+  <div id="toasts" class="toasts" aria-live="polite"></div>
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,6 @@
+.hero-house{text-align:center;padding:2rem 1rem;border:1px solid var(--border);border-radius:var(--radius);
+  background:linear-gradient(180deg,#1f1c27,var(--bg-sub))}
+.hero-house p{max-width:34em;margin:.5rem auto 0;color:var(--text-sub)}
+.status-line{display:flex;gap:.6rem;align-items:center;flex-wrap:wrap}
+.settings-form{display:flex;gap:.6rem;align-items:flex-end;flex-wrap:wrap}
+.settings-form .field{flex:1;min-width:200px}

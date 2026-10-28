@@ -1,0 +1,59 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // 집에 참여한(members 문서가 있는) 사람만 게임 데이터를 다룹니다.
+    function isMember() {
+      return request.auth != null
+        && exists(/databases/$(database)/documents/members/$(request.auth.uid));
+    }
+
+    // 초대 코드(config/invite)와 정원(config/seats)은 관리자가 콘솔에서 직접 만듭니다.
+    // 클라이언트는 config/invite를 읽을 수 없지만, 규칙은 get()으로 비교할 수 있습니다.
+    match /config/invite {
+      allow read, write: if false;
+    }
+
+    // 정원 카운트: 본인이 아직 멤버가 아니고, 같은 요청에서 멤버가 되며, 2명을 넘지 않을 때만 +1
+    match /config/seats {
+      allow read: if false;
+      allow update: if request.auth != null
+        && !exists(/databases/$(database)/documents/members/$(request.auth.uid))
+        && existsAfter(/databases/$(database)/documents/members/$(request.auth.uid))
+        && request.resource.data.keys().hasOnly(['count'])
+        && request.resource.data.count == resource.data.count + 1
+        && request.resource.data.count <= 2;
+      allow create, delete: if false;
+    }
+
+    // 멤버 등록: 본인 UID로만, 초대 코드가 맞고, 정원 증가가 같은 요청에 포함될 때만 가능
+    match /members/{uid} {
+      allow read: if isMember();
+      allow create: if request.auth != null
+        && request.auth.uid == uid
+        && request.resource.data.keys().hasOnly(['inviteCode'])
+        && request.resource.data.inviteCode ==
+           get(/databases/$(database)/documents/config/invite).data.code
+        && get(/databases/$(database)/documents/config/seats).data.count < 2
+        && getAfter(/databases/$(database)/documents/config/seats).data.count ==
+           get(/databases/$(database)/documents/config/seats).data.count + 1;
+      allow update, delete: if false;
+    }
+
+    // 플레이어 문서: 멤버는 모두 읽을 수 있고, 쓰기는 본인 문서의 정해진 필드만
+    match /players/{uid} {
+      allow read: if isMember();
+      allow create, update: if isMember()
+        && request.auth.uid == uid
+        && request.resource.data.keys().hasOnly(['displayName', 'createdAt', 'lastLoginAt'])
+        && request.resource.data.displayName is string
+        && request.resource.data.displayName.size() > 0
+        && request.resource.data.displayName.size() <= 20;
+      allow delete: if false;
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

@@ -1,0 +1,31 @@
+.page-panel{width:100%;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;
+  box-shadow:inset 0 0 0 4px var(--card),inset 0 0 0 5px var(--border);display:grid;gap:.9rem}
+.page-panel.narrow{max-width:420px}
+.page-panel h2{font-size:1.1rem}
+
+.field{display:grid;gap:.3rem;font-size:.9rem;color:var(--text-sub)}
+.field input{min-height:var(--tap);padding:.5rem .8rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text)}
+.field input:focus{border-color:var(--moon);outline:none}
+.form-error{color:#e0a0a5;background:rgba(140,69,75,.25);border:1px solid var(--blood);border-radius:var(--radius);padding:.5rem .8rem;font-size:.9rem}
+
+.btn{min-height:var(--tap);padding:.5rem 1.1rem;background:var(--bg-sub);border:1px solid var(--border);border-radius:var(--radius);color:var(--text)}
+.btn:hover:not(:disabled){border-color:var(--moon)}
+.btn-primary{background:var(--parchment);border-color:var(--parchment);color:#2a2230;font-weight:700}
+.btn-primary:hover:not(:disabled){background:#e6d8ba;border-color:#e6d8ba}
+.btn-danger{border-color:var(--blood);color:#e0a0a5}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+
+.nav-item{display:flex;align-items:center;justify-content:space-between;gap:.5rem;min-height:var(--tap);padding:.5rem .8rem;border:1px solid transparent;border-radius:var(--radius);background:none;color:var(--text);text-align:left}
+.nav-item small{color:var(--text-sub);font-size:.7rem}
+.nav-item:disabled{color:var(--text-sub);opacity:.55;cursor:not-allowed}
+.nav-item.active{background:var(--card);border-color:var(--border);color:var(--parchment)}
+.nav-item:hover:not(:disabled){border-color:var(--border)}
+
+.uid-box{display:block;padding:.6rem .8rem;user-select:all}
+.player-row{display:flex;justify-content:space-between;gap:1rem;padding:.6rem 0;border-bottom:1px dashed var(--border)}
+.player-row:last-child{border-bottom:0}
+.badge{font-size:.75rem;padding:0 .5rem;border:1px solid var(--moss);border-radius:999px;color:#a9b89d}
+
+.toasts{position:fixed;top:1rem;right:1rem;left:1rem;display:flex;flex-direction:column;align-items:flex-end;gap:.5rem;z-index:100;pointer-events:none}
+.toast{pointer-events:auto;max-width:360px;padding:.7rem 1rem;background:var(--card);border:1px solid var(--moon);border-radius:var(--radius);box-shadow:0 4px 16px rgba(0,0,0,.5)}
+.toast.error{border-color:var(--blood)}
