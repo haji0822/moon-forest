@@ -2,19 +2,15 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // 집에 참여한(members 문서가 있는) 사람만 게임 데이터를 다룹니다.
     function isMember() {
       return request.auth != null
         && exists(/databases/$(database)/documents/members/$(request.auth.uid));
     }
 
-    // 초대 코드(config/invite)와 정원(config/seats)은 관리자가 콘솔에서 직접 만듭니다.
-    // 클라이언트는 config/invite를 읽을 수 없지만, 규칙은 get()으로 비교할 수 있습니다.
+    // ---------- 가입 (초대 코드 + 정원 2명) ----------
     match /config/invite {
       allow read, write: if false;
     }
-
-    // 정원 카운트: 본인이 아직 멤버가 아니고, 같은 요청에서 멤버가 되며, 2명을 넘지 않을 때만 +1
     match /config/seats {
       allow read: if false;
       allow update: if request.auth != null
@@ -25,8 +21,6 @@ service cloud.firestore {
         && request.resource.data.count <= 2;
       allow create, delete: if false;
     }
-
-    // 멤버 등록: 본인 UID로만, 초대 코드가 맞고, 정원 증가가 같은 요청에 포함될 때만 가능
     match /members/{uid} {
       allow read: if isMember();
       allow create: if request.auth != null
@@ -40,7 +34,7 @@ service cloud.firestore {
       allow update, delete: if false;
     }
 
-    // 플레이어 문서: 멤버는 모두 읽을 수 있고, 쓰기는 본인 문서의 정해진 필드만
+    // ---------- 플레이어 ----------
     match /players/{uid} {
       allow read: if isMember();
       allow create, update: if isMember()
@@ -49,6 +43,66 @@ service cloud.firestore {
         && request.resource.data.displayName is string
         && request.resource.data.displayName.size() > 0
         && request.resource.data.displayName.size() <= 20;
+      allow delete: if false;
+    }
+
+    // ---------- 세계 상태: 기준 시각은 한 번 만들면 바꿀 수 없음 ----------
+    match /world/state {
+      allow read: if isMember();
+      allow create: if isMember()
+        && request.resource.data.keys().hasOnly(['epoch'])
+        && request.resource.data.epoch == request.time;
+      allow update, delete: if false;
+    }
+
+    // ---------- 캐릭터 (문서 ID = 소유자 UID) ----------
+    function profileKeys() {
+      return ['name', 'species', 'speciesCustomName', 'speciesCustomDesc', 'gender', 'age', 'height',
+              'appearance', 'personality', 'features', 'background', 'likes', 'dislikes', 'notes', 'imageUrl'];
+    }
+    function validProfile(d) {
+      return d.name is string && d.name.size() > 0 && d.name.size() <= 30
+        && d.species in ['human', 'werewolf', 'vampire', 'other']
+        && d.speciesCustomName is string && d.speciesCustomName.size() <= 30
+        && (d.species != 'other' || d.speciesCustomName.size() > 0)
+        && d.speciesCustomDesc is string && d.speciesCustomDesc.size() <= 500
+        && d.gender is string && d.gender.size() <= 40
+        && d.age is string && d.age.size() <= 40
+        && d.height is string && d.height.size() <= 40
+        && d.appearance is string && d.appearance.size() <= 2000
+        && d.personality is string && d.personality.size() <= 2000
+        && d.features is string && d.features.size() <= 2000
+        && d.background is string && d.background.size() <= 2000
+        && d.likes is string && d.likes.size() <= 2000
+        && d.dislikes is string && d.dislikes.size() <= 2000
+        && d.notes is string && d.notes.size() <= 2000
+        && d.imageUrl is string && d.imageUrl.size() <= 500;
+    }
+
+    match /characters/{cid} {
+      allow read: if isMember();
+      // 등록: 본인 문서, 시작 값 고정 (레벨·상태를 임의로 정해 만들 수 없음)
+      allow create: if isMember()
+        && cid == request.auth.uid
+        && request.resource.data.keys().hasOnly(profileKeys().concat(
+             ['ownerUid', 'level', 'exp', 'stats', 'hp', 'fatigue', 'satiety', 'lastStateAt', 'createdAt']))
+        && validProfile(request.resource.data)
+        && request.resource.data.ownerUid == request.auth.uid
+        && request.resource.data.level == 1
+        && request.resource.data.exp == 0
+        && request.resource.data.stats == {'vitality': 1, 'explore': 1, 'survival': 1, 'luck': 1}
+        && request.resource.data.hp == 100
+        && request.resource.data.fatigue == 0
+        && request.resource.data.satiety == 100
+        && request.resource.data.lastStateAt == request.time
+        && request.resource.data.createdAt == request.time;
+      // 수정: 본인 프로필 필드만 (레벨·경험치·상태·소유자는 변경 불가)
+      allow update: if isMember()
+        && cid == request.auth.uid
+        && resource.data.ownerUid == request.auth.uid
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(profileKeys().concat(['updatedAt']))
+        && validProfile(request.resource.data)
+        && request.resource.data.updatedAt == request.time;
       allow delete: if false;
     }
 

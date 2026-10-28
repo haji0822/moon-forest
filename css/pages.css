@@ -4,3 +4,15 @@
 .status-line{display:flex;gap:.6rem;align-items:center;flex-wrap:wrap}
 .settings-form{display:flex;gap:.6rem;align-items:flex-end;flex-wrap:wrap}
 .settings-form .field{flex:1;min-width:200px}
+
+.residents{display:grid;gap:.8rem;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+.resident{display:flex;gap:.9rem;align-items:flex-start;padding:.9rem;background:var(--bg-sub);border:1px solid var(--border);border-radius:var(--radius);color:var(--text)}
+.resident:hover{border-color:var(--moon)}
+.resident>div{flex:1;min-width:0}
+.codex{display:flex;gap:1.2rem;align-items:flex-start}
+.codex>div{flex:1;min-width:0}
+.profile{display:grid;grid-template-columns:7em 1fr;gap:.4rem .8rem;margin:0}
+.profile dt{color:var(--text-sub)}
+.profile dd{margin:0;white-space:pre-wrap}
+.traits{padding-left:1.2rem;list-style:disc}
+@media (max-width:560px){.codex{flex-direction:column}.profile{grid-template-columns:1fr}}

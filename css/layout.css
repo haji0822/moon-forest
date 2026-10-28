@@ -19,3 +19,6 @@
   .topbar{padding:.7rem 1rem}
   .content{padding:1rem;padding-bottom:calc(5.5rem + env(safe-area-inset-bottom,0px))}
 }
+
+.world-bar{display:flex;gap:1.2rem;flex-wrap:wrap;padding:.5rem 1.5rem;font-size:.9rem;color:var(--moon);border-bottom:1px solid var(--border);background:var(--bg-sub)}
+@media (max-width:760px){.world-bar{padding:.5rem 1rem;gap:.8rem}}

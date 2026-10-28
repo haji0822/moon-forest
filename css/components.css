@@ -29,3 +29,20 @@
 .toasts{position:fixed;top:1rem;right:1rem;left:1rem;display:flex;flex-direction:column;align-items:flex-end;gap:.5rem;z-index:100;pointer-events:none}
 .toast{pointer-events:auto;max-width:360px;padding:.7rem 1rem;background:var(--card);border:1px solid var(--moon);border-radius:var(--radius);box-shadow:0 4px 16px rgba(0,0,0,.5)}
 .toast.error{border-color:var(--blood)}
+
+select,textarea{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);padding:.5rem .8rem}
+select{min-height:var(--tap)}
+textarea{resize:vertical;line-height:1.6}
+.field textarea:focus,select:focus{border-color:var(--moon);outline:none}
+.row{display:flex;gap:.6rem;flex-wrap:wrap}
+a.btn{display:inline-flex;align-items:center;justify-content:center}
+
+.portrait{width:64px;height:64px;flex:none;border-radius:50%;border:1px solid var(--border);background:var(--bg-sub);overflow:hidden;display:flex;align-items:center;justify-content:center;color:var(--parchment);font-size:1.5rem;font-weight:700}
+.portrait.large{width:112px;height:112px;font-size:2.6rem}
+.portrait img{width:100%;height:100%;object-fit:cover}
+
+.vital{display:grid;grid-template-columns:3.6em 1fr auto;gap:.5rem;align-items:center;font-size:.85rem;margin:.15rem 0}
+.bar{height:8px;background:var(--bg);border:1px solid var(--border);border-radius:999px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--moss)}
+.bar.bad i{background:var(--blood)}
+.vital b{font-weight:400;min-width:5.5em;text-align:right}
